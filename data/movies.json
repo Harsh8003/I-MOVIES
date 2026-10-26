@@ -22,10 +22,10 @@
     "releaseDate": "2024-07-26T00:00:00.000Z",
     "isActive": true,
     "featured": true,
-    "_id": "6adf97f239a2e671b1a8f334",
+    "_id": "6adf9e5fb3bf461e99931765",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:02.962Z",
-    "updatedAt": "2026-10-26T18:12:02.962Z"
+    "createdAt": "2026-10-26T18:39:27.454Z",
+    "updatedAt": "2026-10-26T18:39:27.454Z"
   },
   {
     "title": "Gladiator II",
@@ -50,10 +50,10 @@
     "releaseDate": "2024-11-22T00:00:00.000Z",
     "isActive": true,
     "featured": true,
-    "_id": "6adf97f239a2e671b1a8f335",
+    "_id": "6adf9e5fb3bf461e99931766",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.168Z",
-    "updatedAt": "2026-10-26T18:12:03.168Z"
+    "createdAt": "2026-10-26T18:39:27.458Z",
+    "updatedAt": "2026-10-26T18:39:27.458Z"
   },
   {
     "title": "Spider-Man: Across the Spider-Verse",
@@ -78,10 +78,10 @@
     "releaseDate": "2023-06-02T00:00:00.000Z",
     "isActive": true,
     "featured": true,
-    "_id": "6adf97f239a2e671b1a8f336",
+    "_id": "6adf9e5fb3bf461e99931767",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.172Z",
-    "updatedAt": "2026-10-26T18:12:03.172Z"
+    "createdAt": "2026-10-26T18:39:27.459Z",
+    "updatedAt": "2026-10-26T18:39:27.459Z"
   },
   {
     "title": "Dune: Part Two",
@@ -106,10 +106,10 @@
     "releaseDate": "2024-03-01T00:00:00.000Z",
     "isActive": true,
     "featured": true,
-    "_id": "6adf97f239a2e671b1a8f337",
+    "_id": "6adf9e5fb3bf461e99931768",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.177Z",
-    "updatedAt": "2026-10-26T18:12:03.177Z"
+    "createdAt": "2026-10-26T18:39:27.461Z",
+    "updatedAt": "2026-10-26T18:39:27.461Z"
   },
   {
     "title": "Oppenheimer",
@@ -134,10 +134,10 @@
     "releaseDate": "2023-07-21T00:00:00.000Z",
     "isActive": true,
     "featured": true,
-    "_id": "6adf97f239a2e671b1a8f338",
+    "_id": "6adf9e5fb3bf461e99931769",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.194Z",
-    "updatedAt": "2026-10-26T18:12:03.194Z"
+    "createdAt": "2026-10-26T18:39:27.462Z",
+    "updatedAt": "2026-10-26T18:39:27.462Z"
   },
   {
     "title": "The Batman",
@@ -162,10 +162,10 @@
     "releaseDate": "2022-03-04T00:00:00.000Z",
     "isActive": true,
     "featured": false,
-    "_id": "6adf97f239a2e671b1a8f339",
+    "_id": "6adf9e5fb3bf461e9993176a",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.227Z",
-    "updatedAt": "2026-10-26T18:12:03.227Z"
+    "createdAt": "2026-10-26T18:39:27.462Z",
+    "updatedAt": "2026-10-26T18:39:27.462Z"
   },
   {
     "title": "Interstellar",
@@ -190,10 +190,10 @@
     "releaseDate": "2014-11-07T00:00:00.000Z",
     "isActive": true,
     "featured": true,
-    "_id": "6adf97f239a2e671b1a8f33a",
+    "_id": "6adf9e5fb3bf461e9993176b",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.233Z",
-    "updatedAt": "2026-10-26T18:12:03.233Z"
+    "createdAt": "2026-10-26T18:39:27.463Z",
+    "updatedAt": "2026-10-26T18:39:27.463Z"
   },
   {
     "title": "Avatar: The Way of Water",
@@ -218,10 +218,10 @@
     "releaseDate": "2022-12-16T00:00:00.000Z",
     "isActive": true,
     "featured": false,
-    "_id": "6adf97f239a2e671b1a8f33b",
+    "_id": "6adf9e5fb3bf461e9993176c",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.233Z",
-    "updatedAt": "2026-10-26T18:12:03.233Z"
+    "createdAt": "2026-10-26T18:39:27.463Z",
+    "updatedAt": "2026-10-26T18:39:27.463Z"
   },
   {
     "title": "Inception",
@@ -246,10 +246,10 @@
     "releaseDate": "2010-07-16T00:00:00.000Z",
     "isActive": true,
     "featured": false,
-    "_id": "6adf97f239a2e671b1a8f33c",
+    "_id": "6adf9e5fb3bf461e9993176d",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.234Z",
-    "updatedAt": "2026-10-26T18:12:03.234Z"
+    "createdAt": "2026-10-26T18:39:27.463Z",
+    "updatedAt": "2026-10-26T18:39:27.463Z"
   },
   {
     "title": "Joker: Folie à Deux",
@@ -274,10 +274,10 @@
     "releaseDate": "2024-10-04T00:00:00.000Z",
     "isActive": true,
     "featured": false,
-    "_id": "6adf97f239a2e671b1a8f33d",
+    "_id": "6adf9e5fb3bf461e9993176e",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.237Z",
-    "updatedAt": "2026-10-26T18:12:03.237Z"
+    "createdAt": "2026-10-26T18:39:27.464Z",
+    "updatedAt": "2026-10-26T18:39:27.464Z"
   },
   {
     "title": "Top Gun: Maverick",
@@ -301,10 +301,10 @@
     "releaseDate": "2022-05-27T00:00:00.000Z",
     "isActive": true,
     "featured": false,
-    "_id": "6adf97f239a2e671b1a8f33e",
+    "_id": "6adf9e5fb3bf461e9993176f",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.249Z",
-    "updatedAt": "2026-10-26T18:12:03.249Z"
+    "createdAt": "2026-10-26T18:39:27.464Z",
+    "updatedAt": "2026-10-26T18:39:27.464Z"
   },
   {
     "title": "Guardians of the Galaxy Vol. 3",
@@ -329,9 +329,9 @@
     "releaseDate": "2023-05-05T00:00:00.000Z",
     "isActive": true,
     "featured": false,
-    "_id": "6adf97f239a2e671b1a8f33f",
+    "_id": "6adf9e5fb3bf461e99931770",
     "__v": 0,
-    "createdAt": "2026-10-26T18:12:03.254Z",
-    "updatedAt": "2026-10-26T18:12:03.254Z"
+    "createdAt": "2026-10-26T18:39:27.464Z",
+    "updatedAt": "2026-10-26T18:39:27.464Z"
   }
 ]

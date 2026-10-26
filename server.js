@@ -22,11 +22,40 @@ app.use(express.urlencoded({ extended: true }));
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use('/api/auth', authLimiter);
 
+// Ensure DB is connected for serverless invocations (e.g. Vercel)
+let isDbInitialized = false;
+let dbInitPromise = null;
+
+app.use(async (req, res, next) => {
+  if (!isDbInitialized) {
+    if (!dbInitPromise) {
+      dbInitPromise = (async () => {
+        try {
+          await connectDB();
+          if (process.env.VERCEL) {
+            try {
+              await require('./src/utils/seed').seedData();
+            } catch (seedErr) {
+              console.warn('Vercel seed notice:', seedErr.message);
+            }
+          }
+        } catch (dbErr) {
+          console.error('Database connection error:', dbErr.message);
+        }
+        isDbInitialized = true;
+      })();
+    }
+    await dbInitPromise;
+  }
+  next();
+});
+
 // API Routes
 app.use('/api/auth',      require('./src/routes/authRoutes'));
 app.use('/api/movies',    require('./src/routes/movieRoutes'));
 app.use('/api/showtimes', require('./src/routes/showtimeRoutes'));
 app.use('/api/bookings',  require('./src/routes/bookingRoutes'));
+
 
 // Live Backend Health & Telemetry
 app.get('/api/health', async (req, res) => {
@@ -127,5 +156,11 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-startServer();
+// Standalone server for local development or container hosting (Render, Railway, etc.)
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+module.exports = app;
+
 

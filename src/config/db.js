@@ -3,6 +3,11 @@ const mongoose = require('mongoose');
 let mongod = null;
 
 const connectDB = async () => {
+  // Return immediately if already connected (vital for serverless functions)
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
   const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
   // 1. If remote/Atlas URI is provided, connect directly
@@ -16,12 +21,14 @@ const connectDB = async () => {
       return uri;
     } catch (err) {
       console.warn(` Cloud MongoDB connection failed: ${err.message}`);
-      console.log(' Falling back to in-memory MongoDB...');
+      if (!process.env.VERCEL) {
+        console.log(' Falling back to in-memory MongoDB...');
+      }
     }
   }
 
   // 2. If localhost URI provided, test if local mongod is active
-  if (uri && (uri.includes('localhost') || uri.includes('127.0.0.1'))) {
+  if (uri && (uri.includes('localhost') || uri.includes('127.0.0.1')) && !process.env.VERCEL) {
     try {
       const conn = await mongoose.connect(uri, {
         serverSelectionTimeoutMS: 2000,
@@ -33,7 +40,15 @@ const connectDB = async () => {
     }
   }
 
-  // 3. Fallback to in-memory MongoDB (works locally and in memory-supported containers)
+  // 3. On Vercel, in-memory MongoDB binary cannot run inside AWS Lambda
+  if (process.env.VERCEL) {
+    console.error('❌ Running on Vercel without a Cloud MongoDB URI!');
+    console.error('👉 Please configure MONGODB_URI in your Vercel Project Settings > Environment Variables.');
+    console.error('   (e.g., your free MongoDB Atlas connection string: mongodb+srv://...)');
+    return;
+  }
+
+  // 4. Fallback to in-memory MongoDB for local development
   try {
     const { MongoMemoryServer } = require('mongodb-memory-server');
     console.log(' Starting in-memory MongoDB engine...');
@@ -48,10 +63,7 @@ const connectDB = async () => {
     return memoryUri;
   } catch (error) {
     console.error(` In-Memory MongoDB Failed: ${error.message}`);
-    console.warn('⚠️  TIP: Set MONGODB_URI in your cloud deployment environment variables (e.g. free MongoDB Atlas connection string).');
-    if (process.env.NODE_ENV === 'production' && !uri) {
-      console.error('❌ In production, please configure MONGODB_URI to connect to MongoDB Atlas.');
-    }
+    console.warn('⚠️ TIP: Set MONGODB_URI in your cloud deployment environment variables (e.g. free MongoDB Atlas connection string).');
   }
 };
 
