@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IMovies — Cinema Reimagined</title>
+  <meta name="description" content="IMovies: Browse movies, select showtimes, and reserve seats with real-time availability. The ultimate online cinema experience." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="#" class="nav-logo" onclick="showPage('home')">
+      <span class="logo-icon">🎬</span>
+      <span class="logo-text">IMovies</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#" class="nav-link active" onclick="showPage('home')">Home</a>
+      <a href="#" class="nav-link" onclick="showPage('movies')">Movies</a>
+      <a href="#" class="nav-link" onclick="showPage('bookings')">My Bookings</a>
+    </div>
+    <div class="nav-actions">
+      <!-- 3 Local Hosts Quick Switcher Badge -->
+      <div class="hosts-switcher-badge" title="Active on 3 Localhost Ports">
+        <span class="hosts-dot"></span>
+        <span class="hosts-label">3 Hosts:</span>
+        <a href="http://localhost:5000" target="_blank" class="host-link active" title="Localhost 5000">5000</a>
+        <span class="host-sep">·</span>
+        <a href="http://localhost:3000" target="_blank" class="host-link" title="Localhost 3000">3000</a>
+        <span class="host-sep">·</span>
+        <a href="http://localhost:8080" target="_blank" class="host-link" title="Localhost 8080">8080</a>
+      </div>
+
+      <!-- Live Backend Telemetry Indicator -->
+      <button class="btn-backend-status" onclick="openBackendModal()" title="View Live Backend Engine & Database Status">
+        <span class="backend-live-pulse"></span>
+        <span class="backend-status-text">Backend: Online 🟢</span>
+      </button>
+
+      <!-- Theme Color Selector -->
+      <div class="theme-picker-wrapper">
+        <button class="theme-btn" id="themeBtn" onclick="cycleTheme()" title="Switch Color Palette">
+          <span id="themeIcon">👑</span>
+          <span id="themeName" class="theme-text">Gold Luxe</span>
+        </button>
+      </div>
+
+      <div id="authButtons">
+        <button class="btn btn-ghost" onclick="quickDemoLogin()" title="1-Click Instant Demo Login">⚡ Demo User</button>
+        <button class="btn btn-ghost" onclick="openModal('loginModal')">Login</button>
+        <button class="btn btn-primary" onclick="openModal('registerModal')">Sign Up</button>
+      </div>
+      <div id="userMenu" class="user-menu hidden">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <span id="userName">User</span>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== PAGES ===== -->
+<main id="appRoot">
+
+  <!-- HOME PAGE -->
+  <section id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge">✨ Now Showing</div>
+        <h1 class="hero-title" id="heroTitle">Experience Cinema<br/><span class="gradient-text">Like Never Before</span></h1>
+        <p class="hero-subtitle" id="heroSubtitle">Book your perfect seat in seconds. Real-time availability, instant confirmation.</p>
+        <div class="hero-actions">
+          <button class="btn btn-hero" onclick="showPage('movies')" id="heroBookBtn">Browse Movies</button>
+          <button class="btn btn-ghost-large" onclick="scrollToFeatured()">Featured Films ↓</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num" id="statMovies">6</span><span class="stat-label">Movies</span></div>
+          <div class="stat"><span class="stat-num" id="statShows">90+</span><span class="stat-label">Showtimes</span></div>
+          <div class="stat"><span class="stat-num">3</span><span class="stat-label">Premium Halls</span></div>
+        </div>
+      </div>
+      <div class="hero-featured" id="heroFeaturedCards"></div>
+    </div>
+
+    <div class="section" id="featuredSection">
+      <div class="section-header">
+        <h2 class="section-title">Featured <span class="gradient-text">Films</span></h2>
+        <button class="btn btn-ghost" onclick="showPage('movies')">View All →</button>
+      </div>
+      <div class="movie-grid" id="featuredMovies"></div>
+    </div>
+
+    <div class="promo-section">
+      <div class="promo-card">
+        <div class="promo-icon">💺</div>
+        <h3>Choose Your Seat</h3>
+        <p>Interactive seat map with real-time availability tracking</p>
+      </div>
+      <div class="promo-card">
+        <div class="promo-icon">🔒</div>
+        <h3>Secure Booking</h3>
+        <p>JWT-secured transactions with instant booking confirmation</p>
+      </div>
+      <div class="promo-card">
+        <div class="promo-icon">🎟️</div>
+        <h3>Digital Tickets</h3>
+        <p>Get your e-ticket instantly. No printing required</p>
+      </div>
+      <div class="promo-card">
+        <div class="promo-icon">📱</div>
+        <h3>Any Device</h3>
+        <p>Fully responsive experience on mobile, tablet, and desktop</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOVIES PAGE -->
+  <section id="page-movies" class="page">
+    <div class="page-header">
+      <h1 class="page-title">All <span class="gradient-text">Movies</span></h1>
+      <p class="page-subtitle">Discover what's showing now and coming soon</p>
+    </div>
+    <div class="filter-bar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="movieSearch" placeholder="Search movies..." oninput="filterMovies()" />
+      </div>
+      <div class="genre-filters" id="genreFilters">
+        <button class="genre-btn active" onclick="filterByGenre('all', this)">All</button>
+        <button class="genre-btn" onclick="filterByGenre('Action', this)">Action</button>
+        <button class="genre-btn" onclick="filterByGenre('Sci-Fi', this)">Sci-Fi</button>
+        <button class="genre-btn" onclick="filterByGenre('Drama', this)">Drama</button>
+        <button class="genre-btn" onclick="filterByGenre('Comedy', this)">Comedy</button>
+        <button class="genre-btn" onclick="filterByGenre('Adventure', this)">Adventure</button>
+        <button class="genre-btn" onclick="filterByGenre('Thriller', this)">Thriller</button>
+      </div>
+    </div>
+    <div class="movie-grid" id="allMoviesGrid">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading movies...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOVIE DETAIL PAGE -->
+  <section id="page-movie-detail" class="page">
+    <div id="movieDetailContent"></div>
+  </section>
+
+  <!-- SEAT SELECTION PAGE -->
+  <section id="page-seat-select" class="page">
+    <div id="seatSelectContent"></div>
+  </section>
+
+  <!-- BOOKINGS PAGE -->
+  <section id="page-bookings" class="page">
+    <div class="page-header">
+      <h1 class="page-title">My <span class="gradient-text">Bookings</span></h1>
+      <p class="page-subtitle">Manage your cinema reservations</p>
+    </div>
+    <div id="bookingsContent">
+      <div class="auth-prompt">
+        <div class="auth-prompt-icon">🎟️</div>
+        <h3>Sign in to view your bookings</h3>
+        <p>Create an account or log in to manage your cinema reservations</p>
+        <button class="btn btn-primary" onclick="openModal('loginModal')">Login to Continue</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== TOAST ===== -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <div class="modal-header">
+      <div class="modal-logo">🎬</div>
+      <h2>Welcome Back</h2>
+      <p>Sign in to your IMovies account</p>
+    </div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="loginBtn">Sign In</button>
+      <div class="modal-hint">
+        Admin demo: <code>admin@imovies.com</code> / <code>admin123</code>
+      </div>
+    </form>
+    <p class="modal-footer">Don't have an account? <a href="#" onclick="switchModal('loginModal','registerModal')">Sign Up</a></p>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <div class="modal-header">
+      <div class="modal-logo">🎬</div>
+      <h2>Create Account</h2>
+      <p>Join IMovies and book instantly</p>
+    </div>
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="regName" placeholder="John Doe" required />
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="regEmail" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label>Phone (optional)</label>
+        <input type="tel" id="regPhone" placeholder="+91 9876543210" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="regPassword" placeholder="Min 6 characters" required minlength="6" />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="registerBtn">Create Account</button>
+    </form>
+    <p class="modal-footer">Already have an account? <a href="#" onclick="switchModal('registerModal','loginModal')">Sign In</a></p>
+  </div>
+</div>
+
+<!-- BACKEND TELEMETRY & SYSTEM MONITOR MODAL -->
+<div class="modal-overlay" id="backendModal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('backendModal')">✕</button>
+    <div id="backendModalContent">
+      <div class="modal-header" style="text-align:left;margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:2.2rem">🖥️</span>
+          <div>
+            <h2>Backend & Database Telemetry</h2>
+            <p>Live Node.js Express server + MongoDB Memory Server + Disk Sync</p>
+          </div>
+        </div>
+      </div>
+      <div id="backendTelemetryBody">
+        <div class="full-spinner"><div class="spinner"></div><p>Fetching real-time backend telemetry...</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAILER MODAL -->
+<div class="modal-overlay" id="trailerModal">
+  <div class="modal modal-video">
+    <button class="modal-close" onclick="closeTrailerModal()">✕</button>
+    <div class="video-container" id="trailerContainer">
+      <!-- iframe injected dynamically -->
+    </div>
+  </div>
+</div>
+
+<!-- FOOD & BEVERAGES MODAL -->
+<div class="modal-overlay" id="foodModal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('foodModal')">✕</button>
+    <div id="foodModalContent"></div>
+  </div>
+</div>
+
+<!-- PAYMENT GATEWAY MODAL (UPI / QR / CARD / NETBANKING) -->
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal modal-wide payment-modal-container">
+    <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
+    <div id="paymentModalContent"></div>
+  </div>
+</div>
+
+<!-- PAYMENT PROCESSING OVERLAY -->
+<div class="modal-overlay" id="processingModal">
+  <div class="modal modal-sm text-center">
+    <div class="payment-processing-spinner">
+      <div class="pulse-ring"></div>
+      <div class="pulse-icon">🔐</div>
+    </div>
+    <h3 id="processingTitle" style="margin-top:1.5rem;font-size:1.2rem;font-weight:700">Verifying Payment...</h3>
+    <p id="processingSubtitle" style="color:var(--text-muted);font-size:0.9rem;margin-top:0.5rem">Connecting to Bank / UPI Network via 256-bit SSL</p>
+    <div class="progress-bar-container" style="margin-top:1.5rem;background:rgba(255,255,255,0.08);border-radius:99px;height:6px;overflow:hidden">
+      <div id="processingProgressBar" style="width:20%;height:100%;background:linear-gradient(90deg,var(--accent),#00e676);transition:width 0.4s ease"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING CONFIRM MODAL -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('bookingModal')">✕</button>
+    <div id="bookingModalContent"></div>
+  </div>
+</div>
+
+<!-- TICKET MODAL -->
+<div class="modal-overlay" id="ticketModal">
+  <div class="modal modal-wide ticket-modal-wide">
+    <button class="modal-close" onclick="closeModal('ticketModal')">✕</button>
+    <div id="ticketModalContent"></div>
+  </div>
+</div>
+
+<!-- FLOATING SCROLL TO TOP BUTTON -->
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()" title="Scroll to top">
+  ↑
+</button>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

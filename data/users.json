@@ -1,0 +1,17 @@
+[
+  {
+    "email": "admin@imovies.com",
+    "role": "admin",
+    "name": "Admin Cinephile"
+  },
+  {
+    "email": "demo@imovies.com",
+    "role": "user",
+    "name": "Demo User"
+  },
+  {
+    "email": "guest@imovies.com",
+    "role": "user",
+    "name": "Guest Cinephile"
+  }
+]

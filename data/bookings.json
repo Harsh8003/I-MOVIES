@@ -1,0 +1,50 @@
+[
+  {
+    "bookingRef": "IMV-MVODKJNP-2FQ7",
+    "movie": "Guardians of the Galaxy Vol. 3",
+    "date": "2026-10-27",
+    "time": "19:30",
+    "hall": "Audi 4 (Prime Luxe)",
+    "seats": [
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "A6"
+    ],
+    "seatCategory": "vip",
+    "addons": [
+      {
+        "name": "Caramel Gourmet Popcorn",
+        "qty": 5,
+        "price": 250,
+        "_id": "6ade7cd43c0ed9b5f4bd758d"
+      }
+    ],
+    "totalAmount": 6390,
+    "paymentMethod": "upi",
+    "userEmail": "admin@imovies.com",
+    "userName": "Admin Cinephile",
+    "bookedAt": "2026-10-25T22:04:05.406Z",
+    "status": "confirmed"
+  },
+  {
+    "bookingRef": "IMV-MVODEFW0-DFOO",
+    "movie": "Deadpool & Wolverine",
+    "date": "2026-10-25",
+    "time": "10:00",
+    "hall": "Audi 1 (IMAX 3D)",
+    "seats": [
+      "C4",
+      "C5"
+    ],
+    "seatCategory": "standard",
+    "addons": [],
+    "totalAmount": 535,
+    "paymentMethod": "UPI_QR",
+    "userEmail": "guest@imovies.com",
+    "userName": "Guest Cinephile",
+    "bookedAt": "2026-10-25T21:59:19.590Z",
+    "status": "confirmed"
+  }
+]
