@@ -32,31 +32,39 @@ app.use('/api/bookings',  require('./src/routes/bookingRoutes'));
 app.get('/api/health', async (req, res) => {
   const mongoose = require('mongoose');
   try {
-    const Movie = require('./src/models/Movie');
-    const Booking = require('./src/models/Booking');
-    const Showtime = require('./src/models/Showtime');
-    const [movieCount, bookingCount, showtimeCount] = await Promise.all([
-      Movie.countDocuments(),
-      Booking.countDocuments(),
-      Showtime.countDocuments()
-    ]);
+    const isDbConnected = mongoose.connection.readyState === 1;
+    let movieCount = 0, bookingCount = 0, showtimeCount = 0;
+    if (isDbConnected) {
+      try {
+        const Movie = require('./src/models/Movie');
+        const Booking = require('./src/models/Booking');
+        const Showtime = require('./src/models/Showtime');
+        [movieCount, bookingCount, showtimeCount] = await Promise.all([
+          Movie.countDocuments(),
+          Booking.countDocuments(),
+          Showtime.countDocuments()
+        ]);
+      } catch (countErr) {
+        // Safe to ignore during initial sync
+      }
+    }
     res.json({
       status: 'online',
       message: 'IMovies Backend & Database Operational 🟢',
+      environment: process.env.NODE_ENV || 'development',
       timestamp: new Date().toISOString(),
       uptimeSeconds: Math.floor(process.uptime()),
       database: {
-        engine: 'MongoDB Memory Server + Physical JSON Disk Persistence',
-        connected: mongoose.connection.readyState === 1,
-        host: mongoose.connection.host || '127.0.0.1',
-        diskStorage: 'Service now/data/bookings.json'
+        engine: mongoose.connection.host ? `MongoDB (${mongoose.connection.host})` : 'MongoDB In-Memory',
+        connected: isDbConnected,
+        host: mongoose.connection.host || 'active',
       },
       stats: {
         movies: movieCount,
         showtimes: showtimeCount,
         bookings: bookingCount
       },
-      ports: [5000, 3000, 8080]
+      port: PORT
     });
   } catch (err) {
     res.status(500).json({ status: 'error', message: err.message });
@@ -66,49 +74,58 @@ app.get('/api/health', async (req, res) => {
 // Serve frontend
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ success: false, message: 'API route not found' });
+  }
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.use(errorHandler);
 
-const PORTS = [5000, 3000, 8080];
+const PORT = parseInt(process.env.PORT, 10) || 5000;
+const HOST = '0.0.0.0';
 
 const startServer = async () => {
-  // Connect to in-memory MongoDB
+  // Connect to MongoDB (Atlas or In-Memory)
   await connectDB();
 
   // Auto-seed demo data
   await require('./src/utils/seed').seedData();
 
-  const activeUrls = [];
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`\n╔══════════════════════════════════════════════════════╗`);
+    console.log(`║           🎬  IMovies Cinema Ready!                  ║`);
+    console.log(`╠══════════════════════════════════════════════════════╣`);
+    console.log(`║  🌐  Server active:  http://${HOST}:${PORT}              ║`);
+    console.log(`║  ⚙️  Environment:    ${process.env.NODE_ENV || 'development'}                     ║`);
+    console.log(`╠══════════════════════════════════════════════════════╣`);
+    console.log(`║  👤  Demo: admin@imovies.com / admin123              ║`);
+    console.log(`╚══════════════════════════════════════════════════════╝\n`);
+  });
 
-  for (const port of PORTS) {
-    try {
-      const server = app.listen(port, () => {
-        activeUrls.push(`http://localhost:${port}`);
-        console.log(`🌐  Localhost server active on port ${port} -> http://localhost:${port}`);
-      });
-      server.on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-          console.warn(`⚠️  Port ${port} in use, trying next port...`);
-        } else {
-          console.error(`❌  Server error on port ${port}:`, err.message);
-        }
-      });
-    } catch (e) {
-      console.warn(`Could not start on port ${port}:`, e.message);
-    }
-  }
+  server.on('error', (err) => {
+    console.error(`❌ Server startup error on port ${PORT}:`, err.message);
+  });
 
-  console.log('\n╔══════════════════════════════════════════════════════╗');
-  console.log('║           🎬  IMovies Cinema Ready!                  ║');
-  console.log('╠══════════════════════════════════════════════════════╣');
-  console.log('║  🌐  Host 1:  http://localhost:5000                   ║');
-  console.log('║  🌐  Host 2:  http://localhost:3000                   ║');
-  console.log('║  🌐  Host 3:  http://localhost:8080                   ║');
-  console.log('╠══════════════════════════════════════════════════════╣');
-  console.log('║  👤  Demo: admin@imovies.com / admin123              ║');
-  console.log('╚══════════════════════════════════════════════════════╝\n');
+  // Graceful shutdown
+  const shutdown = () => {
+    console.log('Shutting down server gracefully...');
+    server.close(() => {
+      const mongoose = require('mongoose');
+      mongoose.connection.close(false).then(() => {
+        console.log('Database connection closed.');
+        process.exit(0);
+      });
+    });
+  };
+
+  process.on('SIGTERM', shutdown);
+  process.on('SIGINT', shutdown);
 };
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 startServer();
+

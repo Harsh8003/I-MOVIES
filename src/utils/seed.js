@@ -166,11 +166,6 @@ const generateShowtimes = (movieIds) => {
 
 const seedData = async (force = false) => {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = path.join(__dirname, '../../data');
-    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-
     const count = await Movie.countDocuments();
     if (count < movies.length || force) {
       await Movie.deleteMany({});
@@ -190,14 +185,22 @@ const seedData = async (force = false) => {
       await User.create({ name: 'Guest Cinephile', email: 'guest@imovies.com', password: 'guestpassword123', role: 'user' });
       console.log('✅ Created demo accounts: admin@imovies.com / admin123 | demo@imovies.com / demo123');
 
-      // Write physical JSON files so user can see real backend records
-      fs.writeFileSync(path.join(dataDir, 'movies.json'), JSON.stringify(createdMovies, null, 2));
-      fs.writeFileSync(path.join(dataDir, 'users.json'), JSON.stringify([
-        { email: 'admin@imovies.com', role: 'admin', name: 'Admin Cinephile' },
-        { email: 'demo@imovies.com', role: 'user', name: 'Demo User' },
-        { email: 'guest@imovies.com', role: 'user', name: 'Guest Cinephile' }
-      ], null, 2));
-      console.log('📁 Synced database records to physical disk: Service now/data/');
+      // Attempt physical disk file write if filesystem permits
+      try {
+        const fs = require('fs');
+        const path = require('path');
+        const dataDir = path.join(__dirname, '../../data');
+        if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+        fs.writeFileSync(path.join(dataDir, 'movies.json'), JSON.stringify(createdMovies, null, 2));
+        fs.writeFileSync(path.join(dataDir, 'users.json'), JSON.stringify([
+          { email: 'admin@imovies.com', role: 'admin', name: 'Admin Cinephile' },
+          { email: 'demo@imovies.com', role: 'user', name: 'Demo User' },
+          { email: 'guest@imovies.com', role: 'user', name: 'Guest Cinephile' }
+        ], null, 2));
+        console.log('📁 Synced database records to physical disk: data/');
+      } catch (fsErr) {
+        // Safe to ignore in containerized or serverless read-only filesystems
+      }
     } else {
       console.log(`📀 Database already seeded with ${count} movies`);
     }
